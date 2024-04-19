@@ -1,4 +1,3 @@
--- Crear la tabla Données_Sportives
 CREATE TABLE Données_Sportives (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     Nom VARCHAR(50) NOT NULL,
