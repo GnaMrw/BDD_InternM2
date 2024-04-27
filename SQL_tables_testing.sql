@@ -1,18 +1,29 @@
-CREATE TABLE Données_Sportives (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    Nom VARCHAR(50) NOT NULL,
-    Genre INT,
-    Date_mesure DATE,
-    Date_naissance DATE,
-    Age INT,
-    Club VARCHAR(50),
-    Discipline VARCHAR(50),
-    Catégorie VARCHAR(50),
-    CONSTRAINT CHK_Genre CHECK (Genre IN(1, 2)),
-    CONSTRAINT CHK_Catégorie CHECK (Catégorie IN('Minime','Espoir','Cadette','Benjamine','Senior'))
-);
+-- Création de la base de données
+CREATE DATABASE testingSB_database;
+-- Utilisation de la base de données créée
+USE testingSB_database;
 
--- Crear el TRIGGER para calcular la edad
+-- Création des tables
+-- Création de la table principale Données_Sportives
+CREATE TABLE Données_Sportives (
+    ID_Athlete INT PRIMARY KEY AUTO_INCREMENT,
+    Prenom_Nom VARCHAR(100) NOT NULL,
+    Genre ENUM('M', 'F') NOT NULL,
+    Date_mesure DATE,
+    dd_mm_yy DATE,
+    Age INT,
+    Club VARCHAR(100),
+    Region VARCHAR(100),
+    Discipline VARCHAR(100),
+    Specialite VARCHAR(100),
+    Statut_SHN VARCHAR(50),
+    Structure_SHN VARCHAR(50),
+    Entraineur VARCHAR(100),
+    Categorie VARCHAR(50),
+    CONSTRAINT CHK_Genre CHECK (Genre IN('M', 'F')),
+    CONSTRAINT CHK_Categorie CHECK (Categorie IN('Minime', 'Espoir', 'Cadette', 'Benjamine', 'Senior', 'Autre'))
+);
+-- Création de TRIGGER pour calculer la date 
 DELIMITER $$
 CREATE TRIGGER calcul_age BEFORE INSERT ON Données_Sportives
 FOR EACH ROW
@@ -23,74 +34,79 @@ END;
 $$
 DELIMITER ;
 
--- Crear la tabla Mesures_anthropométriques
+-- Création de la table Mesures_anthropométriques
 CREATE TABLE Mesures_anthropométriques (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     ID_Athlete INT,
-    Taille_cm REAL,
-    Poids_kg REAL,
-    Envergure_cm REAL,
-    Longueur_pieds_cm REAL,
-    Longueur_jambes_cm REAL,
-    Hauteur_assise_cm REAL,
-    Age_du_PHV REAL,
-    Maturity_offset REAL,
-    Biceps_mm REAL,
-    Triceps_mm REAL,
-    Subscap_mm REAL,
-    Iliac_mm REAL,
-    FAT_pourcentage REAL,
-    FFM_pourcentage REAL,
-    FAT_kg REAL,
-    FFM_kg REAL,
-    BMR_Cal REAL,
-    Graisse_viscérale_Echl REAL,
-    FOREIGN KEY (ID_Athlete) REFERENCES Données_Sportives(ID)
+    Taille_cm FLOAT NOT NULL,
+    Poids_kg FLOAT NOT NULL,
+    Envergure_cm FLOAT,
+    Longueur_Pieds_cm FLOAT,
+    Longueur_Jambes_cm FLOAT NOT NULL,
+    Hauteur_Assise_cm FLOAT NOT NULL,
+    Age_PHV FLOAT,
+    Maturity_Offset FLOAT NOT NULL,
+    Biceps_mm INT,
+    Triceps_mm INT,
+    Subscap_mm INT,
+    Iliac_mm INT,
+    FAT_percent FLOAT,
+    FFM_percent FLOAT,
+    FAT_kg FLOAT,
+    FFM_kg FLOAT,
+    BMR_Cal INT,
+    Graisse_viscerale_Echl INT,
+    FOREIGN KEY (ID_Athlete) REFERENCES Données_Sportives(ID_Athlete)
 );
-
--- Crear la tabla Qualités_physiques
+-- Création de la table Qualités_physiques
 CREATE TABLE Qualités_physiques (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     ID_Athlete INT,
-    Détente_verticale VARCHAR(50),
-    premier_Temps_de_vol REAL,
-    première_Hauteur_cm REAL,
-    deuxième_Temps_de_vol REAL,
-    deuxième_Hauteur_cm REAL,
-    Moy_Temps_de_vol REAL,
-    Moy_Hauteur REAL,
-    Drop_jump VARCHAR(50),
-    Hauteur_foulée_pour_CMJ_Plio REAL,
-    CMJ_pliométrie VARCHAR(50),
-    Max_Hauteur_Rght REAL,
-    Min_Hauteur_Rght REAL,
-    Moy_Hauteur_cm_Rght REAL,
-    Moy_Tps_de_contact_s_Rght REAL,
-    Moy_Tvol_s_Rght REAL,
-    Max_Hauteur_Lft REAL,
-    Min_Hauteur_Lft REAL,
-    Moy_Hauteur_cm_Lft REAL,
-    Moy_Tps_de_contact_s_Lft REAL,
-    Moy_Tvol_s_Lft REAL,
-    Stiffness_classic REAL,
-    fifteens_STIFFNESS_RIGHT_FOOT REAL,
-    Moy_Tps_de_contact_s_Rgt REAL,
-    Moy_Hauteur_cm_Rgt REAL,
-    Moy_T_Cont_s_Rgt REAL,
-    fifteens_STIFFNESS_LEFT_FOOT REAL,
-    Moy_Tps_de_contact_s_Lft_ REAL,
-    Moy_Hauteur_cm_Lft_ REAL,
-    Moy_T_Cont_s_Lft_ REAL,
-    fifteens_CLASSIC_STIFFNESS REAL,
-    Moy_tps_de_contact_s REAL,
-    Moy_hauteur_cm REAL,
-    Distance REAL,
-    Temps_envol REAL,
-    Temps_contact_sol REAL,
-    Série_1 VARCHAR(100),
-    Série_2 VARCHAR(100),
-    Série_3 VARCHAR(100),
-    Série_4 VARCHAR(100),
-    Série_5 VARCHAR(100),
-    FOREIGN KEY (ID_Athlete) REFERENCES Données_Sportives(ID)
+    CMJ_Tps_Vol1_s FLOAT,
+    CMJ_Hauteur1_cm FLOAT,
+    CMJ_Tps_Vol2_s FLOAT,
+    CMJ_Hauteur2_cm FLOAT,
+    CMJ_Moy_Tps_Vol_s FLOAT,
+    CMJ_Moy_Hauteur_cm FLOAT,
+    Drop_Jump VARCHAR(100),
+    Hauteur_Foulee_CMJ_Plio FLOAT,
+    CMJ_Pliometrie VARCHAR(100),
+    Sauts_Max_Hauteur_Droit_cm FLOAT,
+    Sauts_Min_Hauteur_Droit_cm FLOAT,
+    Sauts_Moy_Hauteur_Droit_cm FLOAT,
+    Sauts_Moy_Tps_Contact_Droit_s FLOAT,
+    Sauts_Moy_Tvol_Droit_s FLOAT,
+    Sauts_Max_Hauteur_Gauche_cm FLOAT,
+    Sauts_Min_Hauteur_Gauche_cm FLOAT,
+    Sauts_Moy_Hauteur_Gauche_cm FLOAT,
+    Sauts_Moy_Tps_Contact_Gauche_s FLOAT,
+    Sauts_Moy_Tvol_Gauche_s FLOAT,
+    Sauts_Max_Hauteur_cm_Classic FLOAT,
+    Sauts_Min_Hauteur_cm_Classic FLOAT,
+    Sauts_Moy_Hauteur_cm_Classic FLOAT,
+    Sauts_Moy_Tps_Contact_s_Classic FLOAT,
+    Sauts_Moy_Tvol_s_Classic FLOAT,
+    Nmb_15s_Sauts_Pied_Droit INT,
+    Sauts_15s_Tps_Cont_s_Droit FLOAT,
+    Sauts_15s_Moy_Hauteur_cm_Droit FLOAT,
+    Nmb_15s_Sauts_Pied_Gauche INT,
+    Sauts_15s_Moy_Tps_Cont_s_Gauche FLOAT,
+    Sauts_15s_Moy_Hauteur_cm_Gauche FLOAT,
+    Nmb_15s_Sauts_Classic INT,
+    Sauts_15s_Moy_Tps_Cont_s_Classic FLOAT,
+    Sauts_15s_Moy_Hauteur_cm_Classic FLOAT,
+    Nb_Appuis_Serie1_Opto_0m_5m_Cell INT,
+    Vitesse_5m_Opto1_m_s FLOAT,
+    Tps_Vol_5m_Opto1_s FLOAT,
+    Tps_Cont_sol_5m_Opto1_s FLOAT,
+    Nb_Appuis_Serie2_Opto_25m_30m_Cell INT,
+    Vitesse_5m_Opto2_m_s FLOAT,
+    Tps_Vol_5m_Opto2_s FLOAT,
+    Moy_Tps_Cont_sol_5m_Opto2_s FLOAT,
+    Nb_Appuis_Serie3_Opto_45m_50m_Cell INT,
+    Vitesse_5m_Opto3_m_s FLOAT,
+    Tps_Vol_5m_Opto3_s FLOAT,
+    Tps_Cont_sol_5m_Opto3_s FLOAT,
+    FOREIGN KEY (ID_Athlete) REFERENCES Données_Sportives(ID_Athlete)
 );
+
